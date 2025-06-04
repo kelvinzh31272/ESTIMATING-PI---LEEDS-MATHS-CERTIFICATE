@@ -1,0 +1,73 @@
+%LEIBNIZ
+
+clear
+digits(100)
+function sum = arctan(x,n)
+    sum = 0;
+    for idx = 0:n-1
+        term = x^(1+2*idx)*(-1)^idx*(1/(1+2*idx));
+        sum = sum + term;
+    end
+end
+
+n = 10 .^ [0:9];
+sum = vpa(zeros(size(n)));
+time = vpa(zeros(size(n)));
+for idx = 1:size(n,2)
+    idx;
+    tic;
+    p = 4 * arctan(1,n(idx));
+    sum(idx) = p;
+    time(idx) = toc;
+end
+
+var = vpa(sum,9);
+E = vpa(abs(vpa(sum)-vpa(pi)),9);
+logn = log10(n);
+logE = log10(E);
+logt = log10(time);
+
+%remove first two elements for the linear regression
+%logE(1:2) = []
+%logn(1:2) = []
+
+%LINEAR REGRESSION AND PLOTS
+clf
+
+hfig = figure
+modele = fit(logn',logE',"poly1")
+modelt = fit(logn(6:end)',logt(6:end)', "poly1")
+
+hold on
+yyaxis left
+
+plot(logn,modele(logn),"r-","linewidth", 2)
+plot(logn,logE,"rdiamond","linewidth", 2)
+
+xlabel("log10(n)")
+ylabel("log10(E)")
+
+yyaxis right
+
+plot(logn,modelt(logn),"b-","linewidth", 2)
+plot(logn,logt, "b+", "linewidth", 2)
+
+ax = findall(hfig,'Type','axes');
+yyaxis left
+set(ax,'XColor','k','YColor','r')
+yyaxis right
+set(ax,'XColor','k','YColor','b')
+
+ legend("error data", "error linear fit", "time data", "time linear fit")
+title("log10(E) and log10(T) against log10(n) for Leibniz","FontSize", 12)
+hold off
+
+
+
+
+
+
+
+
+
+
