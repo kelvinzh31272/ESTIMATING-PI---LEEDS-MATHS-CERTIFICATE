@@ -1,0 +1,31 @@
+
+%MACHIN-LIKE FORMULAE
+
+clear
+digits(20000)
+function sum = arctan(x,n)
+    sum = 0;
+    for idx = 0:n
+        term = vpa(x)^(1+2*idx)*(-1)^idx*(1/(1+2*idx));
+        sum = sum + term;
+    end
+end
+
+function p = machin2(n)
+    p = 4 * (4 *arctan(sym(1/5),n)-arctan(sym(1/239),n));
+end
+
+k=6
+numterms = (10 * ones(1,k)) .^ [0:k-1];
+mach = vpa(zeros(k,2));
+
+for idx = 1:k
+    tic
+    mach(idx,1) = machin2(numterms(idx));
+    mach(idx,2) = toc;
+    idx
+end
+mach(:,1) = round(log10(abs(mach(:,1)-pi)),1);
+
+save("estimates.mat","mach")
+
