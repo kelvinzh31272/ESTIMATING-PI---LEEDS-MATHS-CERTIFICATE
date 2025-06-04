@@ -1,0 +1,7 @@
+%WALLIS PRODUCT, CHANGE N FOR NUMBER OF TERMS
+
+N = 100;
+k = 1:N;
+terms = (2*k ./ (2*k - 1)) .* (2*k ./ (2*k + 1));
+product = 2*prod(terms);
+fprintf('Value of the product for N = %d: %.15f\n', N, product);
